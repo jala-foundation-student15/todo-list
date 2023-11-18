@@ -4,6 +4,8 @@ API created for JalaSoft Dev Test on 11-18-2023. With this API it is possible to
 
 ## Installation
 
+If you have DOCKER, you can use the docker-compose.yml file to compose up the 2 services (todo-list api and db) and you will be able to run the project. Otherwise, you can run the project as follows:
+
 Before proceed you need to install dependencies:
 
 ```bash
@@ -24,7 +26,3 @@ $ yarn start
 # development watch mode
 $ yarn start:dev 
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
