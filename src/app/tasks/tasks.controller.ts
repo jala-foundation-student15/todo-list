@@ -9,11 +9,18 @@ import {
   HttpCode,
   HttpStatus,
   ParseUUIDPipe,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
+  ParseBoolPipe,
 } from "@nestjs/common";
 import { TasksService } from "./tasks.service";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
+import { ApiTags, ApiQuery } from "@nestjs/swagger";
+import { IFindTasksOptions } from "./interfaces/tasks.interfaces";
 
+@ApiTags("tasks")
 @Controller("tasks")
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
@@ -24,10 +31,24 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
+  @ApiQuery({ name: "page", required: false, type: Number })
+  @ApiQuery({ name: "limit", required: false, type: Number })
+  @ApiQuery({ name: "withDeleted", required: false, type: Boolean })
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll() {
-    return this.tasksService.findAll();
+  async findAll(
+    @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query("withDeleted", new DefaultValuePipe(false), ParseBoolPipe)
+    withDeleted: boolean = false,
+  ) {
+    const options: IFindTasksOptions = {
+      page,
+      limit: limit > 10 ? 10 : limit,
+      withDeleted,
+    };
+
+    return this.tasksService.findAll(options);
   }
 
   @Get(":id")

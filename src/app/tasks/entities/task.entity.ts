@@ -7,10 +7,16 @@ import {
   DeleteDateColumn,
 } from "typeorm";
 
+export enum TaskCategory {
+  STUDY = "study",
+  WORK = "work",
+  SELF_CARE = "self care",
+}
+
 export enum TaskStatus {
   PENDING = "pending",
   IN_PROGRESS = "in progress",
-  COMPLETED = "completed",
+  COMPLETE = "complete",
   OVERDUE = "overdue",
 }
 
@@ -21,6 +27,9 @@ export class Task {
 
   @Column({ type: "date" })
   dueDate: Date;
+
+  @Column({ type: "enum", enum: TaskCategory })
+  category: TaskCategory;
 
   @Column({ type: "enum", enum: TaskStatus, default: TaskStatus.PENDING })
   status: TaskStatus;

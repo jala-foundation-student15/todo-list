@@ -4,7 +4,9 @@ import { UpdateTaskDto } from "./dto/update-task.dto";
 import { Task } from "./entities/task.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { MessagesHelper } from "src/shared/helpers/messages.helper";
+import { MessagesHelper } from "src/app/tasks/helpers/messages.helper";
+import { IFindTasksOptions } from "./interfaces/tasks.interfaces";
+import { paginate } from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class TasksService {
@@ -19,8 +21,17 @@ export class TasksService {
     return await this.tasksRepository.save(newTask);
   }
 
-  async findAll() {
-    return await this.tasksRepository.find();
+  async findAll(options: IFindTasksOptions) {
+    const { page, limit } = options;
+
+    return paginate<Task>(
+      this.tasksRepository,
+      { page, limit },
+      {
+        where: {},
+        order: {},
+      },
+    );
   }
 
   async findOne(id: string) {
